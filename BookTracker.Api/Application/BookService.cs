@@ -1,6 +1,8 @@
 using BookTracker.Api.Application.Booklist;
+using BookTracker.Api.Application.CreateBook;
 using BookTracker.Api.Domain;
 using BookTracker.Api.Storage;
+using Microsoft.VisualBasic;
 
 namespace BookTracker.Api.Application;
 
@@ -17,5 +19,22 @@ public class BookService(IBookRepository bookRepository)
         });
         // Gebruik LINQ om de entiteiten in `books` te mappen naar een `BookInfo` lijst.
         return [.. summary]; // = return summary.ToList()
+    }
+
+    public async Task<CreateBookResponse> CreateBook(CreateBookRequest request)
+    {
+        var book = new Book
+        {
+            Author = request.Author,
+            Title = request.Title,
+            Year = request.Year,
+        };
+        await bookRepository.AddAsync(book);
+        return new CreateBookResponse
+        {
+            Author = book.Author,
+            Title = book.Title,
+            Year = book.Year,
+        };
     }
 }
