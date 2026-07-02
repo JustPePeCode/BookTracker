@@ -1,5 +1,6 @@
 using BookTracker.Api.Application.Booklist;
 using BookTracker.Api.Application.CreateBook;
+using BookTracker.Api.Application.UpdateBook;
 using BookTracker.Api.Domain;
 using BookTracker.Api.Storage;
 using Microsoft.VisualBasic;
@@ -29,13 +30,14 @@ public class BookService(IBookRepository bookRepository)
             Title = request.Title,
             Year = request.Year,
         };
-        await bookRepository.AddAsync(book);
+        var savedBook = await bookRepository.AddAsync(book);
+
         return new CreateBookResponse
         {
-            Id= book.Id,
-            Author = book.Author,
-            Title = book.Title,
-            Year = book.Year,
+            Id= savedBook.Id,
+            Author = savedBook.Author,
+            Title = savedBook.Title,
+            Year = savedBook.Year,
         };
     }
 
@@ -43,4 +45,17 @@ public class BookService(IBookRepository bookRepository)
     {
         return await bookRepository.DeleteAsync(id);
     }
+    public async Task<bool> UpdateBook(int id, UpdateBookRequest request)
+{
+    var book =
+        new Book
+        {
+            Id = id,
+            Title = request.Title,
+            Author = request.Author,
+            Year = request.Year
+        };
+
+    return await bookRepository.UpdateAsync(book);
+}
 }
