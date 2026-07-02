@@ -1,6 +1,8 @@
+using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.Booklist;
 using BookTracker.Api.Domain;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace BookTracker.Api.Tests.IntegrationTests.BookList;
@@ -23,12 +25,15 @@ public class BookListTests
         ));
 
         var client = factory.CreateClient();
-        var books = await client.GetFromJsonAsync<List<BookInfo>>("/books");
+
+        var response = await client.GetAsync("/books");
+        var books = await response.Content.ReadFromJsonAsync<List<BookInfo>>();
 
         Assert.NotNull(books);
 
         var bookInfo = Assert.Single(books);
         Assert.Equal("Cannery Row", bookInfo.Title);
         Assert.Equal("John Steinbeck", bookInfo.Author);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 }
