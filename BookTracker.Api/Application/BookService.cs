@@ -1,9 +1,10 @@
 using BookTracker.Api.Application.Booklist;
 using BookTracker.Api.Application.CreateBook;
+using BookTracker.Api.Application.GetBookById;
 using BookTracker.Api.Application.UpdateBook;
 using BookTracker.Api.Domain;
 using BookTracker.Api.Storage;
-using Microsoft.VisualBasic;
+
 
 namespace BookTracker.Api.Application;
 
@@ -57,5 +58,24 @@ public class BookService(IBookRepository bookRepository)
         };
 
     return await bookRepository.UpdateAsync(book);
+}
+
+public async Task<BookDetails?> GetBookById(int id)
+{
+    var book = await bookRepository.GetByIdAsync(id);
+
+    if (book is null)
+    {
+        return null;
+    }
+
+    return
+        new BookDetails
+        {
+            Id = book.Id,
+            Title = book.Title,
+            Author = book.Author,
+            Year = book.Year
+        };
 }
 }

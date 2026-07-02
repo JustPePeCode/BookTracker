@@ -12,7 +12,7 @@ public class EfBookRepository(AppDbContext dbContext) : IBookRepository
 
     public async Task<Book?> GetByIdAsync(int id)
     {
-        return await dbContext.Books.FindAsync(); // find book in context by id, ... async
+        return await dbContext.Books.FindAsync(id); // find book in context by id, ... async
     }
 
     public async Task<Book> AddAsync(Book book)
