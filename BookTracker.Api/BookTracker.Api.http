@@ -17,9 +17,9 @@ Content-Type: application/json
 
 
 
-GET http://localhost:5000/books
+GET http://localhost:5198/books
 
-POST http://localhost:5000/books
+POST http://localhost:5198/books
 Content-Type: application/json
 
 {
@@ -28,4 +28,9 @@ Content-Type: application/json
   "year": 1965
 }
 
-GET http://localhost:5000/books
+GET http://localhost:5198/books
+
+### Delete Book
+DELETE http://localhost:5198/books/1
+
+DELETE http://localhost:5198/books/9999

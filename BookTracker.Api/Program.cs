@@ -35,6 +35,16 @@ app.MapPost(
     }
 );
 
+app.MapDelete("/books/{id:int}", async (int id, BookService service) =>
+{
+    var deleted = await service.DeleteBook(id);
+    if (!deleted)
+    {
+        return Results.NotFound();
+    }
+    return Results.NoContent();
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

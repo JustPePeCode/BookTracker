@@ -32,9 +32,15 @@ public class BookService(IBookRepository bookRepository)
         await bookRepository.AddAsync(book);
         return new CreateBookResponse
         {
+            Id= book.Id,
             Author = book.Author,
             Title = book.Title,
             Year = book.Year,
         };
+    }
+
+    public async Task<bool> DeleteBook(int id)
+    {
+        return await bookRepository.DeleteAsync(id);
     }
 }
