@@ -3,6 +3,7 @@ using BookTracker.Api.Application.CreateBook;
 using BookTracker.Api.Application.UpdateBook;
 using BookTracker.Api.Storage;
 using Microsoft.EntityFrameworkCore;
+using BookTracker.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,51 +25,7 @@ if (app.Environment.IsDevelopment())
     using var scope = app.Services.CreateScope();
     scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.EnsureCreated();
 }
-
-app.MapGet("/books", async (BookService service) => Results.Ok(await service.GetAllBooks()));
-
-
-
-app.MapGet("/books/{id:int}", async (int id, BookService service) =>
-{
-    var book = await service.GetBookById(id);
-
-    if (book is null)
-    {
-        return Results.NotFound();
-    }
-
-    return Results.Ok(book);
-});
-
-app.MapPost(
-    "/books",
-    async (CreateBookRequest request, BookService service) =>
-    {
-        var response = await service.CreateBook(request);
-        return Results.Created($"/book/{response.Id}", response);
-    }
-);
-
-app.MapDelete("/books/{id:int}", async (int id, BookService service) =>
-{
-    var deleted = await service.DeleteBook(id);
-    if (!deleted)
-    {
-        return Results.NotFound();
-    }
-    return Results.NoContent();
-});
-
-app.MapPut("/books/{id:int}", async (int id, UpdateBookRequest request, BookService service) =>
-{
-    var updated = await service.UpdateBook(id, request);
-    if (!updated)
-    {
-        return Results.NotFound();
-    }
-    return Results.NoContent();
-});
+app.MapBookEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
