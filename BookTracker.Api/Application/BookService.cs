@@ -24,36 +24,39 @@ public class BookService(IBookRepository bookRepository)
     }
 
     public async Task<CreateBookResponse> CreateBook(CreateBookRequest request)
-    {
-        var book = new Book
+{
+    var book =
+        new Book
         {
-            Author = request.Author,
-            Title = request.Title,
-            Year = request.Year,
+            Title = new BookTitle(request.Title),
+            Author = new AuthorName(request.Author),
+            Year = request.Year
         };
-        var savedBook = await bookRepository.AddAsync(book);
 
-        return new CreateBookResponse
+    var savedBook = await bookRepository.AddAsync(book);
+
+    return
+        new CreateBookResponse
         {
-            Id= savedBook.Id,
-            Author = savedBook.Author,
-            Title = savedBook.Title,
-            Year = savedBook.Year,
+            Id = savedBook.Id,
+            Title = savedBook.Title.Value,
+            Author = savedBook.Author.Value,
+            Year = savedBook.Year
         };
-    }
+}
 
     public async Task<bool> DeleteBook(int id)
     {
         return await bookRepository.DeleteAsync(id);
     }
-    public async Task<bool> UpdateBook(int id, UpdateBookRequest request)
+public async Task<bool> UpdateBook(int id, UpdateBookRequest request)
 {
     var book =
         new Book
         {
             Id = id,
-            Title = request.Title,
-            Author = request.Author,
+            Title = // ... create value object here,
+            Author = // ... create value object here,
             Year = request.Year
         };
 
