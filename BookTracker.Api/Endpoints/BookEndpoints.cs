@@ -1,9 +1,11 @@
 using BookTracker.Api.Application;
 using BookTracker.Api.Application.BookList;
 using BookTracker.Api.Application.CreateBook;
+using BookTracker.Api.Application.DeleteBook;
 using BookTracker.Api.Application.GetBookById;
 using BookTracker.Api.Application.UpdateBook;
 using BookTracker.Api.Domain;
+using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
 
 namespace BookTracker.Api.Endpoints;
 
@@ -21,10 +23,10 @@ public static class BookEndpoints
     }
 
     public static async Task<IResult> GetAllBooks(GetBookListQuery query)
-{
-    var books = await query.Execute();
-    return Results.Ok(books);
-}
+    {
+        var books = await query.Execute();
+        return Results.Ok(books);
+    }
 
     public static async Task<IResult> GetBookById(int id, GetBookByIdQuery query)
     {
@@ -38,11 +40,11 @@ public static class BookEndpoints
         return Results.Ok(book);
     }
 
-    public static async Task<IResult> CreateBook(CreateBookRequest request, BookService service)
+    public static async Task<IResult> CreateBook(CreateBookRequest request, CreateBookCommandHandler handler)
     {
         try
         {
-            var response = await service.CreateBook(request);
+            var response = await handler.Execute(request);
             return Results.Created($"/books/{response.Id}", response);
         }
         catch (DomainException exception)
@@ -51,30 +53,30 @@ public static class BookEndpoints
         }
     }
 
-    public static async Task<IResult> UpdateBook(int id, UpdateBookRequest request, BookService service)
+    public static async Task<IResult> UpdateBook(int id, UpdateBookRequest request, UpdateBookCommandHandler handler)
     {
-    try
-    {
-         var updated = await service.UpdateBook(id, request);
-
-        if (!updated)
+        try
         {
-            return Results.NotFound();
+            var updated = await handler.Execute(id, request);
+
+            if (!updated)
+            {
+                return Results.NotFound();
+            }
+
+            return Results.NoContent();
+        }
+        catch (DomainException exception)
+        {
+
+            return Results.BadRequest(new { error = exception.Message });
         }
 
-        return Results.NoContent();
-    }
-    catch (DomainException exception)
-    {
-        
-        return Results.BadRequest(new {error =exception.Message});
-    }
-       
     }
 
-    public static async Task<IResult> DeleteBook(int id, BookService service)
+    public static async Task<IResult> DeleteBook(int id, DeleteBookCommandHandler handler)
     {
-        var deleted = await service.DeleteBook(id);
+        var deleted = await handler.Execute(id);
         if (!deleted)
         {
             return Results.NotFound();
