@@ -55,3 +55,9 @@ GET http://localhost:5198/books/1
 
 GET http://localhost:5198/books/9999
 ###
+
+### Get Books Page 1
+GET http://localhost:5198/books?page=1&pageSize=10
+
+### Get Books Page 2
+GET http://localhost:5198/books?page=2&pageSize=10

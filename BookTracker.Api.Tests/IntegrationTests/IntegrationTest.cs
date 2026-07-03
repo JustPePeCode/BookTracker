@@ -10,16 +10,6 @@ public abstract class IntegrationTest : IDisposable
 
     protected EfWriter Writer { get; }
 
-
-
-
-
-
-
-
-
-    
-
     protected IntegrationTest()
     {
         Client = factory.CreateClient();

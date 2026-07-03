@@ -22,11 +22,13 @@ public static class BookEndpoints
         return app;
     }
 
-    public static async Task<IResult> GetAllBooks(GetBookListQuery query)
+    public static async Task<IResult> GetAllBooks([AsParameters] GetBookListRequest request, GetBookListQuery query)
     {
-        var books = await query.Execute();
+        var books = await query.Execute(request);
+
         return Results.Ok(books);
     }
+
 
     public static async Task<IResult> GetBookById(int id, GetBookByIdQuery query)
     {
