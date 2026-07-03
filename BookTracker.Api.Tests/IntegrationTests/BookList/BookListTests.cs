@@ -2,8 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.Booklist;
 using BookTracker.Api.Domain;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
+
 
 namespace BookTracker.Api.Tests.IntegrationTests.BookList;
 
@@ -18,8 +17,8 @@ public class BookListTests
         writer.Seed(db => db.Books.Add(
             new Book
             {
-                Title = "Cannery Row",
-                Author = "John Steinbeck",
+                Title = new BookTitle ("Cannery Row"),
+                Author = new AuthorName("John Steinbeck"),
                 Year = 1945
             }
         ));

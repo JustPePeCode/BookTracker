@@ -16,69 +16,69 @@ public class BookService(IBookRepository bookRepository)
         var summary = books.Select(b => new BookInfo
         {
             Id = b.Id,
-            Author = b.Author,
-            Title = b.Title,
+            Author = b.Author.Value,
+            Title = b.Title.Value,
         });
         // Gebruik LINQ om de entiteiten in `books` te mappen naar een `BookInfo` lijst.
         return [.. summary]; // = return summary.ToList()
     }
 
     public async Task<CreateBookResponse> CreateBook(CreateBookRequest request)
-{
-    var book =
-        new Book
-        {
-            Title = new BookTitle(request.Title),
-            Author = new AuthorName(request.Author),
-            Year = request.Year
-        };
+    {
+        var book =
+            new Book
+            {
+                Title = new BookTitle(request.Title),
+                Author = new AuthorName(request.Author),
+                Year = request.Year
+            };
 
-    var savedBook = await bookRepository.AddAsync(book);
+        var savedBook = await bookRepository.AddAsync(book);
 
-    return
-        new CreateBookResponse
-        {
-            Id = savedBook.Id,
-            Title = savedBook.Title.Value,
-            Author = savedBook.Author.Value,
-            Year = savedBook.Year
-        };
-}
+        return
+            new CreateBookResponse
+            {
+                Id = savedBook.Id,
+                Title = savedBook.Title.Value,
+                Author = savedBook.Author.Value,
+                Year = savedBook.Year
+            };
+    }
 
     public async Task<bool> DeleteBook(int id)
     {
         return await bookRepository.DeleteAsync(id);
     }
-public async Task<bool> UpdateBook(int id, UpdateBookRequest request)
-{
-    var book =
-        new Book
-        {
-            Id = id,
-            Title = // ... create value object here,
-            Author = // ... create value object here,
-            Year = request.Year
-        };
-
-    return await bookRepository.UpdateAsync(book);
-}
-
-public async Task<BookDetails?> GetBookById(int id)
-{
-    var book = await bookRepository.GetByIdAsync(id);
-
-    if (book is null)
+    public async Task<bool> UpdateBook(int id, UpdateBookRequest request)
     {
-        return null;
+        var book =
+            new Book
+            {
+                Id = id,
+                Title = new BookTitle(request.Title),// ... create value object here,
+                Author = new AuthorName(request.Author),// ... create value object here,
+                Year = request.Year
+            };
+
+        return await bookRepository.UpdateAsync(book);
     }
 
-    return
-        new BookDetails
+    public async Task<BookDetails?> GetBookById(int id)
+    {
+        var book = await bookRepository.GetByIdAsync(id);
+
+        if (book is null)
         {
-            Id = book.Id,
-            Title = book.Title,
-            Author = book.Author,
-            Year = book.Year
-        };
-}
+            return null;
+        }
+
+        return
+            new BookDetails
+            {
+                Id = book.Id,
+                Title = book.Title.Value,
+                Author = book.Author.Value,
+                Year = book.Year
+            };
+    }
 }

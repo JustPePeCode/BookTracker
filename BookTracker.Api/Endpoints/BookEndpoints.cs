@@ -1,6 +1,7 @@
 using BookTracker.Api.Application;
 using BookTracker.Api.Application.CreateBook;
 using BookTracker.Api.Application.UpdateBook;
+using BookTracker.Api.Domain;
 
 namespace BookTracker.Api.Endpoints;
 
@@ -37,22 +38,36 @@ public static class BookEndpoints
 
     public static async Task<IResult> CreateBook(CreateBookRequest request, BookService service)
     {
+        try
         {
             var response = await service.CreateBook(request);
-            return Results.Created($"/book/{response.Id}", response);
+            return Results.Created($"/books/{response.Id}", response);
+        }
+        catch (DomainException exception)
+        {
+            return Results.BadRequest(new { error = exception.Message });
         }
     }
 
     public static async Task<IResult> UpdateBook(int id, UpdateBookRequest request, BookService service)
     {
-        var updated = await service.UpdateBook(id, request);
-
-        if (!updated)
+        try
         {
-            return Results.NotFound();
+            var updated = await service.UpdateBook(id, request);
+
+            if (!updated)
+            {
+                return Results.NotFound();
+            }
+
+            return Results.NoContent();
+        }
+        catch (DomainException exception)
+        {
+
+            return Results.BadRequest(new { error = exception.Message });
         }
 
-        return Results.NoContent();
     }
 
     public static async Task<IResult> DeleteBook(int id, BookService service)
