@@ -10,18 +10,7 @@ namespace BookTracker.Api.Application;
 
 public class BookService(IBookRepository bookRepository)
 {
-    public async Task<IReadOnlyList<BookInfo>> GetAllBooks()
-    {
-        var books = await bookRepository.GetAllAsync();
-        var summary = books.Select(b => new BookInfo
-        {
-            Id = b.Id,
-            Author = b.Author.Value,
-            Title = b.Title.Value,
-        });
-        // Gebruik LINQ om de entiteiten in `books` te mappen naar een `BookInfo` lijst.
-        return [.. summary]; // = return summary.ToList()
-    }
+
 
     public async Task<CreateBookResponse> CreateBook(CreateBookRequest request)
     {
@@ -63,22 +52,5 @@ public class BookService(IBookRepository bookRepository)
         return await bookRepository.UpdateAsync(book);
     }
 
-    public async Task<BookDetails?> GetBookById(int id)
-    {
-        var book = await bookRepository.GetByIdAsync(id);
 
-        if (book is null)
-        {
-            return null;
-        }
-
-        return
-            new BookDetails
-            {
-                Id = book.Id,
-                Title = book.Title.Value,
-                Author = book.Author.Value,
-                Year = book.Year
-            };
-    }
 }

@@ -1,5 +1,7 @@
 using BookTracker.Api.Application;
+using BookTracker.Api.Application.BookList;
 using BookTracker.Api.Application.CreateBook;
+using BookTracker.Api.Application.GetBookById;
 using BookTracker.Api.Application.UpdateBook;
 using BookTracker.Api.Domain;
 
@@ -18,15 +20,15 @@ public static class BookEndpoints
         return app;
     }
 
-    public static async Task<IResult> GetAllBooks(BookService service)
-    {
-        var books = await service.GetAllBooks();
-        return Results.Ok(books);
-    }
+    public static async Task<IResult> GetAllBooks(GetBookListQuery query)
+{
+    var books = await query.Execute();
+    return Results.Ok(books);
+}
 
-    public static async Task<IResult> GetBookById(int id, BookService service)
+    public static async Task<IResult> GetBookById(int id, GetBookByIdQuery query)
     {
-        var book = await service.GetBookById(id);
+        var book = await query.Execute(id);
 
         if (book is null)
         {
@@ -51,23 +53,23 @@ public static class BookEndpoints
 
     public static async Task<IResult> UpdateBook(int id, UpdateBookRequest request, BookService service)
     {
-        try
+    try
+    {
+         var updated = await service.UpdateBook(id, request);
+
+        if (!updated)
         {
-            var updated = await service.UpdateBook(id, request);
-
-            if (!updated)
-            {
-                return Results.NotFound();
-            }
-
-            return Results.NoContent();
-        }
-        catch (DomainException exception)
-        {
-
-            return Results.BadRequest(new { error = exception.Message });
+            return Results.NotFound();
         }
 
+        return Results.NoContent();
+    }
+    catch (DomainException exception)
+    {
+        
+        return Results.BadRequest(new {error =exception.Message});
+    }
+       
     }
 
     public static async Task<IResult> DeleteBook(int id, BookService service)
