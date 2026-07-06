@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.UpdateBook;
 using BookTracker.Api.Domain;
-using Microsoft.VisualBasic;
+
 
 namespace BookTracker.Api.Tests.IntegrationTests.UpdateBook;
 
@@ -37,6 +37,7 @@ public class UpdateBookTests
         var client = factory.CreateClient();
 
         var response = await client.PutAsJsonAsync("/books/1", request);
+        await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
@@ -66,6 +67,7 @@ public class UpdateBookTests
         var client = factory.CreateClient();
 
         var response = await client.PutAsJsonAsync("/books/9999", request);
+        await response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }

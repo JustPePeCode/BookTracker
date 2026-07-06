@@ -18,14 +18,15 @@ public class CreateBookTests : IntegrationTest
             Year = 1940,
         };
         var response = await Client.PostAsJsonAsync("/books", request);
-        var created = await response.Content.ReadFromJsonAsync<CreateBookResponse>();
+
+        var created = await response.ReadJsonAs<CreateBookResponse>(HttpStatusCode.Created);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.NotNull(created);
         Assert.True(created.Id > 0);
         Assert.Equal("The Heart Is a Lonely Hunter", created.Title);
 
-       var book = Reader.Query(context => context.Find<Book>(created.Id));
+        var book = Reader.Query(context => context.Find<Book>(created.Id));
 
         Assert.NotNull(book);
         Assert.Equal("The Heart Is a Lonely Hunter", book.Title.Value);
@@ -33,18 +34,19 @@ public class CreateBookTests : IntegrationTest
         Assert.Equal(1940, book.Year);
     }
     [Fact]
-public async Task PostBookReturnsBadRequestWhenTitleIsWhitespace()
-{
-    var request =
-        new CreateBookRequest
-        {
-            Title = "   ",
-            Author = "Carson McCullers",
-            Year = 1940
-        };
+    public async Task PostBookReturnsBadRequestWhenTitleIsWhitespace()
+    {
+        var request =
+            new CreateBookRequest
+            {
+                Title = "   ",
+                Author = "Carson McCullers",
+                Year = 1940
+            };
 
-    var response = await Client.PostAsJsonAsync("/books", request);
+        var response = await Client.PostAsJsonAsync("/books", request);
+        await response.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-}
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
 }

@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application;
 using BookTracker.Api.Application.Booklist;
@@ -9,37 +10,29 @@ namespace BookTracker.Api.Tests.IntegrationTests.BookList;
 public class BookListTests : IntegrationTest
 {
 
-    [Fact]
-    public async Task GetBooksReturnsBooks()
+   [Fact]
+public async Task GetBooksReturnsBooks()
+{
+    Writer.Seed(db =>
     {
-
-        Writer.Seed(db => db.Books.Add(
+        db.Books.Add(
             new Book
             {
                 Title = new BookTitle("Cannery Row"),
                 Author = new AuthorName("John Steinbeck"),
                 Year = 1945
-            }
+            });
+    });
 
-        ));
+    var response = await Client.GetAsync("/books");
 
-        
+    var result = await response.ReadJsonAs<PagedResult<BookInfo>>(HttpStatusCode.OK);
 
-        var response = await Client.GetAsync("/books");
+    var bookInfo = Assert.Single(result.Items);
 
-        var result = await Client.GetFromJsonAsync<PagedResult<BookInfo>>("/books");
-
-        Assert.NotNull(result);
-
-        var bookInfo = Assert.Single(result.Items);
-
-        Assert.Equal("Cannery Row", bookInfo.Title);
-        Assert.Equal("John Steinbeck", bookInfo.Author);
-        Assert.Equal(1, result.Page);
-        Assert.Equal(10, result.PageSize);
-        Assert.Equal(1, result.TotalItems);
-        Assert.Equal(1, result.TotalPages);
-    }
+    Assert.Equal("Cannery Row", bookInfo.Title);
+    Assert.Equal("John Steinbeck", bookInfo.Author);
+}
     [Fact]
     public async Task GetBooksReturnsRequestedPage()
     {

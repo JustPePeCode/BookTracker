@@ -24,6 +24,7 @@ public class DeleteBookTests : IntegrationTest
 
 
         var response = await Client.DeleteAsync("/books/1");
+        await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
@@ -38,6 +39,7 @@ public class DeleteBookTests : IntegrationTest
 
 
         var response = await Client.DeleteAsync("/books/9999");
+        await response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
