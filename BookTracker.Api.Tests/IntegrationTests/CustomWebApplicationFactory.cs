@@ -3,16 +3,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BookTracker.Api.Tests.IntegrationTests;
 
-
-
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
-
     private SqliteConnection connection = null!;
 
     public EfReader GetReader() => new(Services);
@@ -21,14 +18,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureAppConfiguration((context, config) =>
-{
-    config.AddInMemoryCollection(
-        new Dictionary<string, string?>
-        {
-            ["SeedDatabase"] = "false"
-        });
-});
+        builder.ConfigureAppConfiguration(
+            (context, config) =>
+            {
+                config.AddInMemoryCollection(
+                    new Dictionary<string, string?> { ["SeedDatabase"] = "false" }
+                );
+            }
+        );
         builder.ConfigureServices(services =>
         {
             var descriptor = services.SingleOrDefault(service =>
@@ -57,8 +54,4 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         base.Dispose(disposing);
         connection.Dispose();
     }
-
-
-
 }
-

@@ -2,10 +2,10 @@ using BookTracker.Api.Application;
 using BookTracker.Api.Application.BookList;
 using BookTracker.Api.Application.CreateBook;
 using BookTracker.Api.Application.DeleteBook;
-using BookTracker.Api.Application.GetBookById;
+using BookTracker.Api.Application.GetBookDetails;
+using BookTracker.Api.Application.GetBookSummaries;
 using BookTracker.Api.Application.UpdateBook;
 using BookTracker.Api.Domain;
-using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
 
 namespace BookTracker.Api.Endpoints;
 
@@ -13,8 +13,8 @@ public static class BookEndpoints
 {
     public static IEndpointRouteBuilder MapBookEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/books", GetAllBooks);
-        app.MapGet("/books/{id:int}", GetBookById);
+        app.MapGet("/books", GetBookSummaries);
+        app.MapGet("/books/{id:int}", GetBookDetails);
         app.MapPost("/books", CreateBook);
         app.MapPut("/books/{id:int}", UpdateBook);
         app.MapDelete("/books/{id:int}", DeleteBook);
@@ -22,15 +22,17 @@ public static class BookEndpoints
         return app;
     }
 
-    public static async Task<IResult> GetAllBooks([AsParameters] GetBookListRequest request, GetBookListQuery query)
+    public static async Task<IResult> GetBookSummaries(
+        [AsParameters] GetBookSummariesRequest request,
+        GetBookSummariesQueryHandler query
+    )
     {
         var books = await query.Execute(request);
 
         return Results.Ok(books);
     }
 
-
-    public static async Task<IResult> GetBookById(int id, GetBookByIdQuery query)
+    public static async Task<IResult> GetBookDetails(int id, GetBookDetailsQueryHandler query)
     {
         var book = await query.Execute(id);
 
@@ -42,7 +44,10 @@ public static class BookEndpoints
         return Results.Ok(book);
     }
 
-    public static async Task<IResult> CreateBook(CreateBookRequest request, CreateBookCommandHandler handler)
+    public static async Task<IResult> CreateBook(
+        CreateBookRequest request,
+        CreateBookCommandHandler handler
+    )
     {
         try
         {
@@ -55,7 +60,11 @@ public static class BookEndpoints
         }
     }
 
-    public static async Task<IResult> UpdateBook(int id, UpdateBookRequest request, UpdateBookCommandHandler handler)
+    public static async Task<IResult> UpdateBook(
+        int id,
+        UpdateBookRequest request,
+        UpdateBookCommandHandler handler
+    )
     {
         try
         {
@@ -70,10 +79,8 @@ public static class BookEndpoints
         }
         catch (DomainException exception)
         {
-
             return Results.BadRequest(new { error = exception.Message });
         }
-
     }
 
     public static async Task<IResult> DeleteBook(int id, DeleteBookCommandHandler handler)

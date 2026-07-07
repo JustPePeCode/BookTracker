@@ -1,17 +1,17 @@
-using BookTracker.Api.Application.Booklist;
+using BookTracker.Api.Application.GetBookSummaries;
 using BookTracker.Api.Storage;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookTracker.Api.Application.BookList;
 
-public class GetBookListQuery(AppDbContext dbContext)
+public class GetBookSummariesQueryHandler(AppDbContext dbContext)
 {
     private const int DefaultPage = 1;
     private const int DefaultPageSize = 10;
     private const int MinPage = 1;
     private const int MaxPageSize = 50;
 
-    public async Task<PagedResult<BookInfo>> Execute(GetBookListRequest request)
+    public async Task<PagedResult<BookSummary>> Execute(GetBookSummariesRequest request)
     {
         var page = Math.Max(1, request.Page ?? DefaultPage);
         var pageSize = Math.Clamp(request.PageSize ?? DefaultPageSize, MinPage, MaxPageSize);
@@ -23,8 +23,9 @@ public class GetBookListQuery(AppDbContext dbContext)
             var search = $"%{request.Search.Trim()}%";
 
             query = query.Where(book =>
-                EF.Functions.Like((string)book.Title, search) ||
-                EF.Functions.Like((string)book.Author, search));
+                EF.Functions.Like((string)book.Title, search)
+                || EF.Functions.Like((string)book.Author, search)
+            );
         }
 
         var totalItems = await query.CountAsync();
@@ -33,23 +34,21 @@ public class GetBookListQuery(AppDbContext dbContext)
             .OrderBy(book => book.Id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(book =>
-                new BookInfo
-                {
-                    Id = book.Id,
-                    Title = book.Title.Value,
-                    Author = book.Author.Value
-                })
+            .Select(book => new BookSummary
+            {
+                Id = book.Id,
+                Title = book.Title.Value,
+                Author = book.Author.Value,
+            })
             .ToListAsync();
 
-        return
-            new PagedResult<BookInfo>
-            {
-                Items = books,
-                Page = page,
-                PageSize = pageSize,
-                TotalItems = totalItems,
-                TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
-            };
+        return new PagedResult<BookSummary>
+        {
+            Items = books,
+            Page = page,
+            PageSize = pageSize,
+            TotalItems = totalItems,
+            TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize),
+        };
     }
 }

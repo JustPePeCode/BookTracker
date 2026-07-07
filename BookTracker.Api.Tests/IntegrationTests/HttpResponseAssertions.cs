@@ -6,27 +6,28 @@ namespace BookTracker.Api.Tests.IntegrationTests;
 
 public static class HttpResponseAssertions
 {
-    private static readonly JsonSerializerOptions JsonOptions =
-        new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     public static async Task<T> ReadJsonAs<T>(
         this HttpResponseMessage response,
-        HttpStatusCode expectedStatusCode)
+        HttpStatusCode expectedStatusCode
+    )
     {
         var body = await response.Content.ReadAsStringAsync();
 
         Assert.True(
             response.StatusCode == expectedStatusCode,
             $"""
-             Expected status code:
-             {expectedStatusCode}
+            Expected status code:
+            {expectedStatusCode}
 
-             Actual status code:
-             {response.StatusCode}
+            Actual status code:
+            {response.StatusCode}
 
-             Response body:
-             {body}
-             """);
+            Response body:
+            {body}
+            """
+        );
 
         try
         {
@@ -40,37 +41,40 @@ public static class HttpResponseAssertions
         {
             throw new XunitException(
                 $"""
-                 Response had the expected status code, but could not be parsed as JSON.
+                Response had the expected status code, but could not be parsed as JSON.
 
-                 Expected JSON type:
-                 {typeof(T).Name}
+                Expected JSON type:
+                {typeof(T).Name}
 
-                 Response body:
-                 {body}
+                Response body:
+                {body}
 
-                 JSON error:
-                 {exception.Message}
-                 """);
+                JSON error:
+                {exception.Message}
+                """
+            );
         }
     }
 
     public static async Task ShouldHaveStatusCode(
         this HttpResponseMessage response,
-        HttpStatusCode expectedStatusCode)
+        HttpStatusCode expectedStatusCode
+    )
     {
         var body = await response.Content.ReadAsStringAsync();
 
         Assert.True(
             response.StatusCode == expectedStatusCode,
             $"""
-             Expected status code:
-             {expectedStatusCode}
+            Expected status code:
+            {expectedStatusCode}
 
-             Actual status code:
-             {response.StatusCode}
+            Actual status code:
+            {response.StatusCode}
 
-             Response body:
-             {body}
-             """);
+            Response body:
+            {body}
+            """
+        );
     }
 }

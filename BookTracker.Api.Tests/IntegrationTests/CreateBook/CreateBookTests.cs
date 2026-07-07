@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.CreateBook;
 using BookTracker.Api.Domain;
-using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace BookTracker.Api.Tests.IntegrationTests.CreateBook;
 
@@ -33,16 +32,16 @@ public class CreateBookTests : IntegrationTest
         Assert.Equal("Carson McCullers", book.Author.Value);
         Assert.Equal(1940, book.Year);
     }
+
     [Fact]
     public async Task PostBookReturnsBadRequestWhenTitleIsWhitespace()
     {
-        var request =
-            new CreateBookRequest
-            {
-                Title = "   ",
-                Author = "Carson McCullers",
-                Year = 1940
-            };
+        var request = new CreateBookRequest
+        {
+            Title = "   ",
+            Author = "Carson McCullers",
+            Year = 1940,
+        };
 
         var response = await Client.PostAsJsonAsync("/books", request);
         await response.ShouldHaveStatusCode(HttpStatusCode.BadRequest);

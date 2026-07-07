@@ -1,15 +1,11 @@
 using System.Net;
-using System.Net.Http.Json;
-using BookTracker.Api.Application.GetBookById;
+using BookTracker.Api.Application.GetBookDetails;
 using BookTracker.Api.Domain;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BookTracker.Api.Tests.IntegrationTests.GetBookById;
 
 public class GetBookByIdTests : IntegrationTest
 {
-
-
     [Fact]
     public async Task GetBookByIdReturnsBook()
     {
@@ -20,14 +16,14 @@ public class GetBookByIdTests : IntegrationTest
                 {
                     Title = new BookTitle("Dune"),
                     Author = new AuthorName("Frank Herbert"),
-                    Year = 1965
-                });
+                    Year = 1965,
+                }
+            );
         });
 
         var response = await Client.GetAsync("/books/1");
 
-        var book = await response.ReadJsonAs<BookDetails>(HttpStatusCode.OK);
-
+        var book = await response.ReadJsonAs<GetBookDetailsResponse>(HttpStatusCode.OK);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(book);
