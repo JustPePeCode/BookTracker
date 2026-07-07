@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookTracker.Api.Application.BookList;
 
-public class GetBookSummariesQueryHandler(AppDbContext dbContext)
+public class GetBookSummariesQueryHandler(AppDbContext dbContext) : IHandler
 {
     private const int DefaultPage = 1;
     private const int DefaultPageSize = 10;
@@ -42,7 +42,7 @@ public class GetBookSummariesQueryHandler(AppDbContext dbContext)
             })
             .ToListAsync();
 
-        return new PagedResult<BookSummary>
+        return new GetBookSummariesResponse
         {
             Items = books,
             Page = page,

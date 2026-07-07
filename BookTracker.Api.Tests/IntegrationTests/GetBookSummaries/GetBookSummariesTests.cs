@@ -25,7 +25,7 @@ public class GetBookSummariesTests : IntegrationTest
 
         var response = await Client.GetAsync("/books");
 
-        var result = await response.ReadJsonAs<PagedResult<BookSummary>>(HttpStatusCode.OK);
+        var result = await response.ReadJsonAs<GetBookSummariesResponse>(HttpStatusCode.OK);
 
         var BookSummary = Assert.Single(result.Items);
 
@@ -60,7 +60,7 @@ public class GetBookSummariesTests : IntegrationTest
             );
         });
 
-        var result = await Client.GetFromJsonAsync<PagedResult<BookSummary>>(
+        var result = await Client.GetFromJsonAsync<GetBookSummariesResponse>(
             "/books?page=2&pageSize=1"
         );
 
@@ -90,7 +90,7 @@ public class GetBookSummariesTests : IntegrationTest
             );
         });
 
-        var result = await Client.GetFromJsonAsync<PagedResult<BookSummary>>(
+        var result = await Client.GetFromJsonAsync<GetBookSummariesResponse>(
             "/books?page=99&pageSize=10"
         );
 
@@ -125,7 +125,7 @@ public class GetBookSummariesTests : IntegrationTest
 
         var response = await Client.GetAsync("/books?search=dune");
 
-        var result = await response.ReadJsonAs<PagedResult<BookSummary>>(HttpStatusCode.OK);
+        var result = await response.ReadJsonAs<GetBookSummariesResponse>(HttpStatusCode.OK);
 
         var book = Assert.Single(result.Items);
 
@@ -158,7 +158,7 @@ public class GetBookSummariesTests : IntegrationTest
 
         var response = await Client.GetAsync("/books?search=Raymond");
 
-        var result = await response.ReadJsonAs<PagedResult<BookSummary>>(HttpStatusCode.OK);
+        var result = await response.ReadJsonAs<GetBookSummariesResponse>(HttpStatusCode.OK);
 
         var book = Assert.Single(result.Items);
 
@@ -197,7 +197,7 @@ public class GetBookSummariesTests : IntegrationTest
 
         var response = await Client.GetAsync("/books?search=dune&page=2&pageSize=1");
 
-        var result = await response.ReadJsonAs<PagedResult<BookSummary>>(HttpStatusCode.OK);
+        var result = await response.ReadJsonAs<GetBookSummariesResponse>(HttpStatusCode.OK);
 
         var book = Assert.Single(result.Items);
 
@@ -213,7 +213,7 @@ public class GetBookSummariesTests : IntegrationTest
     {
         var response = await Client.GetAsync("/books?search=dune&page=2&pageSize=1");
 
-        var result = await response.ReadJsonAs<PagedResult<BookSummary>>(HttpStatusCode.OK);
+        var result = await response.ReadJsonAs<GetBookSummariesResponse>(HttpStatusCode.OK);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Empty(result.Items);

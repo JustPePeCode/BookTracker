@@ -1,46 +1,20 @@
-using BookTracker.Api.Application.BookList;
-using BookTracker.Api.Application.CreateBook;
-using BookTracker.Api.Application.DeleteBook;
-using BookTracker.Api.Application.GetBookDetails;
-using BookTracker.Api.Application.UpdateBook;
-using BookTracker.Api.Endpoints;
-using BookTracker.Api.Seeding;
-using BookTracker.Api.Storage;
-using Microsoft.EntityFrameworkCore;
+using BookTracker.Api.Wiring;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.AddBookTracker();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlite(builder.Configuration.GetConnectionString("BookTracker"));
-});
-
-builder.Services.AddScoped<IBookRepository, EfBookRepository>();
-
-builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<GetBookSummariesQueryHandler>();
-builder.Services.AddScoped<GetBookDetailsQueryHandler>();
-builder.Services.AddScoped<CreateBookCommandHandler>();
-builder.Services.AddScoped<UpdateBookCommandHandler>();
-builder.Services.AddScoped<DeleteBookCommandHandler>();
-
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        dbContext.Database.EnsureCreated();
-        if (builder.Configuration.GetValue<bool>("SeedDatabase"))
-            DatabaseSeeder.SeedBooks(dbContext, 500);
-    }
-}
-
-app.MapBookEndpoints();
+app.UseBookTracker();
+app.UseCors();
 
 if (app.Environment.IsDevelopment())
 {
