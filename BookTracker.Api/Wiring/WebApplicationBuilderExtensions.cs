@@ -1,5 +1,6 @@
 using BookTracker.Api.Application;
 using BookTracker.Api.Storage;
+using BookTracker.Api.Storage.Books;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookTracker.Api.Wiring;

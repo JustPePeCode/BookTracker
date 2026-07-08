@@ -1,12 +1,12 @@
 using BookTracker.Api.Domain;
+using BookTracker.Api.Domain.Books;
 using QuickFuzzr;
 
 namespace BookTracker.Api.Seeding;
 
 public static class BookFuzzr
 {
-    public static IEnumerable<Book> Many(int count)
-        => One.Many(count).Generate();
+    public static IEnumerable<Book> Many(int count) => One.Many(count).Generate();
 
     private static readonly string[] Adjectives =
     [
@@ -19,7 +19,7 @@ public static class BookFuzzr
         "Unreasonably Confident",
         "Invisible",
         "Chronically Late",
-        "Over-Caffeinated"
+        "Over-Caffeinated",
     ];
 
     private static readonly string[] Nouns =
@@ -33,7 +33,7 @@ public static class BookFuzzr
         "Goblin",
         "Umbrella",
         "Database",
-        "Octopus"
+        "Octopus",
     ];
 
     private static readonly string[] Situations =
@@ -47,7 +47,7 @@ public static class BookFuzzr
         "During Standup",
         "With No Unit Tests",
         "On a Tuesday",
-        "After the Refactor"
+        "After the Refactor",
     ];
 
     private static readonly string[] FirstNames =
@@ -61,7 +61,7 @@ public static class BookFuzzr
         "Isaac",
         "Mary",
         "Kurt",
-        "Agatha"
+        "Agatha",
     ];
 
     private static readonly string[] LastNames =
@@ -75,7 +75,7 @@ public static class BookFuzzr
         "Bugworthy",
         "Semicolon",
         "Heap",
-        "Async"
+        "Async",
     ];
 
     private static readonly FuzzrOf<string> Situational =
@@ -94,8 +94,7 @@ public static class BookFuzzr
         from noun in Fuzzr.OneOf(Nouns)
         select $"A Brief History of {adjective} {noun}s";
 
-    private static readonly FuzzrOf<string> Title =
-        Fuzzr.OneOf(Situational, Memoir, Academic);
+    private static readonly FuzzrOf<string> Title = Fuzzr.OneOf(Situational, Memoir, Academic);
 
     private static readonly FuzzrOf<string> Author =
         from firstName in Fuzzr.OneOf(FirstNames)
@@ -110,6 +109,6 @@ public static class BookFuzzr
         {
             Title = new BookTitle(title),
             Author = new AuthorName(author),
-            Year = year
+            Year = year,
         };
 }
