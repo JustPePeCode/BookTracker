@@ -5,7 +5,7 @@ using BookTracker.Api.Application.Books.GetBookSummaries;
 using BookTracker.Api.Application.Books.UpdateBook;
 using BookTracker.Api.Domain;
 
-namespace BookTracker.Api.Endpoints;
+namespace BookTracker.Api.Endpoints.Books;
 
 public static class BookEndpoints
 {

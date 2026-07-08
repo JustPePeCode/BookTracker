@@ -22,10 +22,12 @@ public sealed record AuthorName
 
         Value = cleaned;
     }
+
     public static implicit operator string(AuthorName author)
     {
         return author.Value;
     }
+
     public override string ToString()
     {
         return Value;

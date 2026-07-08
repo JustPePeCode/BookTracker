@@ -39,9 +39,4 @@ public class EfBookRepository(AppDbContext dbContext) : IBookRepository
 
         return true;
     }
-
-    Task<Book> IBookRepository.AddAsync(Book book)
-    {
-        return AddAsync(book);
-    }
 }
