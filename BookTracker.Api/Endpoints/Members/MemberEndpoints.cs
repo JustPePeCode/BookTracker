@@ -1,13 +1,11 @@
-using BookTracker.Api.Application.Books.CreateBook;
-using BookTracker.Api.Application.Books.GetMemberSummaries;
+
+using BookTracker.Api.Application.Members.GetMemberSummaries;
 using BookTracker.Api.Application.Members.CreateMember;
 using BookTracker.Api.Application.Members.DeleteMember;
 using BookTracker.Api.Application.Members.GetMemberDetails;
-using BookTracker.Api.Application.Members.GetMemberSummaries;
 using BookTracker.Api.Application.Members.UpdateMember;
 using BookTracker.Api.Domain;
-
-namespace BookTracker.Api.Endpoints.Books;
+namespace BookTracker.Api.Endpoints.Members;
 
 public static class MemberEndpoints
 {

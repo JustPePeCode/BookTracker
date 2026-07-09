@@ -1,8 +1,8 @@
-using BookTracker.Api.Application.Members.GetMemberSummaries;
+
 using BookTracker.Api.Storage;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookTracker.Api.Application.Books.GetMemberSummaries;
+namespace BookTracker.Api.Application.Members.GetMemberSummaries;
 
 public class GetMemberSummariesQueryHandler(AppDbContext dbContext) : IHandler
 {
