@@ -46,6 +46,14 @@ public class AuthorNameTests
         // Then
         Assert.Equal("Author cannot be longer than 100 characters.", exception.Message);
     }
+
+    [Fact]
+    public void AuthorNameRejectsNull()
+    {
+        var exception = Assert.Throws<DomainException>(() => new AuthorName(null!));
+
+        Assert.Equal("Author is required.", exception.Message);
+    }
     // Voeg hier de test 'AuthorNameRejectsNameLongerThan100Characters' toe
     // exception.Message = "Author cannot be longer than 100 characters."
 }
