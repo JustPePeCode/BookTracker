@@ -8,7 +8,7 @@ public sealed record MemberEmail
 
     public MemberEmail(string value)
     {
-        var cleaned = value.Trim();
+        var cleaned = value.Trim().ToLowerInvariant();
 
         if (string.IsNullOrWhiteSpace(cleaned))
         {

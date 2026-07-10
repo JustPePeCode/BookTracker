@@ -34,6 +34,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .Property(b => b.Email)
                 .HasConversion(email => email.Value, value => new MemberEmail(value))
                 .HasMaxLength(MemberEmail.MaxLength);
+
+            member.HasIndex(current => current.Email).IsUnique();
         });
     }
 }

@@ -1,4 +1,5 @@
 using BookTracker.Api.Domain.Members;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookTracker.Api.Storage.Members;
 
@@ -39,4 +40,12 @@ public class EfMemberRepository(AppDbContext dbContext) : IMemberRepository
         return true;
     }
 
+    public async Task<bool> EmailExistsAsync(MemberEmail email, int? memberIdToIgnore)
+    {
+        var all = await dbContext.Members.ToListAsync();
+
+        return all.Any(m =>
+            m.Email == email && (!memberIdToIgnore.HasValue || m.Id != memberIdToIgnore.Value)
+        );
+    }
 }

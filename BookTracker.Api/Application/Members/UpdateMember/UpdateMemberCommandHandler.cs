@@ -3,7 +3,7 @@ using BookTracker.Api.Storage.Members;
 
 namespace BookTracker.Api.Application.Members.UpdateMember;
 
-public class UpdateMemberCommandHandler(IMemberRepository bookRepository) : IHandler
+public class UpdateMemberCommandHandler(IMemberRepository memberRepository) : IHandler
 {
     public async Task<bool> Execute(int id, UpdateMemberRequest request)
     {
@@ -14,6 +14,13 @@ public class UpdateMemberCommandHandler(IMemberRepository bookRepository) : IHan
             Email = new MemberEmail(request.Email), // ... create value object here,
         };
 
-        return await bookRepository.UpdateAsync(member);
+        var emailExists = await memberRepository.EmailExistsAsync(member.Email, id);
+
+        if (emailExists)
+        {
+            throw new MemberEmailAlreadyExistsException();
+        }
+
+        return await memberRepository.UpdateAsync(member);
     }
 }
