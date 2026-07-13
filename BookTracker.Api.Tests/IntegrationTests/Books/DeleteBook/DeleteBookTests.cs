@@ -21,6 +21,8 @@ public class DeleteBookTests : IntegrationTest
             );
         });
 
+        await AuthenticateAsMember();
+
         var response = await Client.DeleteAsync("/books/1");
         await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
@@ -34,6 +36,7 @@ public class DeleteBookTests : IntegrationTest
     [Fact]
     public async Task DeleteBookReturnsNotFoundWhenBookDoesNotExist()
     {
+        await AuthenticateAsMember();
         var response = await Client.DeleteAsync("/books/9999");
         await response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 

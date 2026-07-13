@@ -29,9 +29,10 @@ public class UpdateMemberCommandHandlerMemberTests : IntegrationTest
                 }
             );
         });
+        var memberId = await AuthenticateAsMember();
         var request = new UpdateMemberRequest { Name = "Pjotter", Email = "Jack@Sea.com" };
 
-        var response = await Client.PutAsJsonAsync("/members/2", request);
+        var response = await Client.PutAsJsonAsync($"/members/{memberId}", request);
         await response.ShouldHaveStatusCode(HttpStatusCode.Conflict);
         ;
     }
