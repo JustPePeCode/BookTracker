@@ -16,6 +16,7 @@ public class GetMemberDetailsQueryHandlerTests : IntegrationTest
                 {
                     Name = new MemberName("Jack"),
                     Email = new MemberEmail("Jack@Sea.com"),
+                    PasswordHash = "test-password-hash"
                 }
             );
         });
@@ -28,7 +29,7 @@ public class GetMemberDetailsQueryHandlerTests : IntegrationTest
         Assert.NotNull(member);
         Assert.Equal(1, member.Id);
         Assert.Equal("Jack", member.Name);
-        Assert.Equal("Jack@Sea.com", member.Email);
+        Assert.Equal("jack@sea.com", member.Email);
     }
 
     [Fact]

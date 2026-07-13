@@ -16,6 +16,7 @@ public class DeleteMemberTests : IntegrationTest
                     Id = 1,
                     Name = new MemberName("Jack"),
                     Email = new MemberEmail("Jack@Sea.com"),
+                    PasswordHash = "test-password-hash"
                 }
             );
         });

@@ -10,7 +10,7 @@ public class MemberEmailTests
     {
         var name = new MemberEmail("Mark@hotmail.com");
 
-        Assert.Equal("Mark@hotmail.com", name.Value);
+        Assert.Equal("mark@hotmail.com", name.Value);
     }
 
     [Fact]
@@ -18,7 +18,7 @@ public class MemberEmailTests
     {
         var name = new MemberEmail("  Mark@hotmail.com  ");
 
-        Assert.Equal("Mark@hotmail.com", name.Value);
+        Assert.Equal("mark@hotmail.com", name.Value);
     }
 
     [Fact]
@@ -37,5 +37,13 @@ public class MemberEmailTests
         var exception = Assert.Throws<DomainException>(() => new MemberEmail(tooLong));
 
         Assert.Equal("Email cannot be longer than 200 characters.", exception.Message);
+    }
+
+    [Fact]
+    public void MemberEmailNormalizesValue()
+    {
+        var email = new MemberEmail("  Ada@Example.com  ");
+
+        Assert.Equal("ada@example.com", email.Value);
     }
 }

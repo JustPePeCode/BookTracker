@@ -1,10 +1,14 @@
+using System.Text;
 using BookTracker.Api.Application;
 using BookTracker.Api.Domain.Members;
+using BookTracker.Api.Security;
 using BookTracker.Api.Storage;
 using BookTracker.Api.Storage.Books;
 using BookTracker.Api.Storage.Members;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BookTracker.Api.Wiring;
 
@@ -14,6 +18,7 @@ public static class WebApplicationBuilderExtensions
     {
         RegisterStorage(builder);
         RegisterHandlers(builder.Services);
+        RegisterAuthentication(builder);
 
         return builder;
     }
@@ -45,4 +50,44 @@ public static class WebApplicationBuilderExtensions
     }
 
     private static readonly Type HandlerMarker = typeof(IHandler);
+
+    private static void RegisterAuthentication(WebApplicationBuilder builder)
+    {
+        var settings =
+            builder.Configuration.GetRequiredSection(JwtSettings.SectionName).Get<JwtSettings>()
+            ?? throw new InvalidOperationException("JWT settings are missing.");
+
+        if (string.IsNullOrWhiteSpace(settings.SigningKey))
+        {
+            throw new InvalidOperationException("JWT signing key is missing.");
+        }
+
+        builder.Services.AddSingleton(settings);
+        builder.Services.AddScoped<JwtTokenGenerator>();
+
+        builder
+            .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = settings.Issuer,
+
+                    ValidateAudience = true,
+                    ValidAudience = settings.Audience,
+
+                    ValidateLifetime = true,
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(settings.SigningKey)
+                    ),
+
+                    ClockSkew = TimeSpan.Zero,
+                };
+            });
+
+        builder.Services.AddAuthorization();
+    }
 }

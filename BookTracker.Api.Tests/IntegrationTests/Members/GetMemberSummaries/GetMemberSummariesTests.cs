@@ -28,7 +28,7 @@ public class GetMemberSummariesTests : IntegrationTest
         var MemberSummary = Assert.Single(result.Items);
 
         Assert.Equal("Jack", MemberSummary.Name);
-        Assert.Equal("Jack@Sea.com", MemberSummary.Email);
+        Assert.Equal("jack@sea.com", MemberSummary.Email);
     }
 
     [Fact]
@@ -110,7 +110,7 @@ public class GetMemberSummariesTests : IntegrationTest
         var member = Assert.Single(result.Items);
 
         Assert.Equal("Jack", member.Name);
-        Assert.Equal("Jack@Sea.com", member.Email);
+        Assert.Equal("jack@sea.com", member.Email);
         Assert.Equal(1, result.TotalItems);
         Assert.Equal(1, result.TotalPages);
     }
@@ -141,7 +141,7 @@ public class GetMemberSummariesTests : IntegrationTest
         var member = Assert.Single(result.Items);
 
         Assert.Equal("Woman", member.Name);
-        Assert.Equal("Woman@Complains.com", member.Email);
+        Assert.Equal("woman@complains.com", member.Email);
         Assert.Equal(1, result.TotalItems);
         Assert.Equal(1, result.TotalPages);
     }
@@ -156,16 +156,19 @@ public class GetMemberSummariesTests : IntegrationTest
                 {
                     Name = new MemberName("Jack"),
                     Email = new MemberEmail("Jack@Sea.com"),
+                    PasswordHash = "test-password-hash"
                 },
                 new Member
                 {
                     Name = new MemberName("Woman"),
                     Email = new MemberEmail("Woman@Complains.com"),
+                    PasswordHash = "test-password-hash"
                 },
                 new Member
                 {
                     Name = new MemberName("Jacky"),
                     Email = new MemberEmail("Jacky@Baby.com"),
+                    PasswordHash = "test-password-hash"
                 }
             );
         });
