@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using BookTracker.Api.Application;
 using BookTracker.Api.Domain.Members;
@@ -84,10 +85,24 @@ public static class WebApplicationBuilderExtensions
                         Encoding.UTF8.GetBytes(settings.SigningKey)
                     ),
 
+                    NameClaimType = ClaimTypes.Name,
+                    RoleClaimType = ClaimTypes.Role,
+
                     ClockSkew = TimeSpan.Zero,
                 };
             });
 
-        builder.Services.AddAuthorization();
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy(
+                AuthorizationPolicies.ManageBooks,
+                policy => policy.RequireRole(nameof(MemberRole.Administrator))
+            );
+
+            options.AddPolicy(
+                AuthorizationPolicies.ManageMembers,
+                policy => policy.RequireRole(nameof(MemberRole.Administrator))
+            );
+        });
     }
 }

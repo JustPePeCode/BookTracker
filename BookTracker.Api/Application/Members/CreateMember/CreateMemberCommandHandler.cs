@@ -26,6 +26,8 @@ public class CreateMemberCommandHandler(
         {
             Name = new MemberName(request.Name),
             Email = new MemberEmail(request.Email),
+            PasswordHash = string.Empty,
+            Role = MemberRole.Member,
         };
 
         if (await memberRepository.EmailExistsAsync(member.Email))
