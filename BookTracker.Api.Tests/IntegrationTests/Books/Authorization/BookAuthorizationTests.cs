@@ -1,7 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.Books.CreateBook;
+using BookTracker.Api.Application.Members.CreateMember;
+using BookTracker.Api.Application.Members.UpdateMember;
 using BookTracker.Api.Domain.Books;
+using BookTracker.Api.Domain.Members;
 
 namespace BookTracker.Api.Tests.IntegrationTests.Books.Autherization;
 
@@ -52,5 +55,42 @@ public class BookAuthorizationTests : IntegrationTest
         var response = await Client.GetAsync("/books/1");
 
         await response.ShouldHaveStatusCode(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task CreateMemberDoesNotRequireAuthentication()
+    {
+        var request = new CreateMemberRequest
+        {
+            Name = "Grace Hopper",
+            Email = "grace@example.com",
+            Password = "debugging-moth",
+        };
+
+        var response = await Client.PostAsJsonAsync("/members", request);
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.Created);
+    }
+
+    [Fact]
+    public async Task UpdateMemberRequiresAuthentication()
+    {
+        var member = new Member
+        {
+            Name = new MemberName("Dune"),
+            Email = new MemberEmail("Frank@Herbert"),
+        };
+
+        Writer.Seed(db => db.Members.Add(member));
+
+        var request = new UpdateMemberRequest
+        {
+            Name = "Ada Byron",
+            Email = "ada.byron@example.com",
+        };
+
+        var response = await Client.PutAsJsonAsync($"/members/{member.Id}", request);
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
     }
 }

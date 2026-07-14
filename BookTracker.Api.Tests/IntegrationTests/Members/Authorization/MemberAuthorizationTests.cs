@@ -22,5 +22,61 @@ public class MemberAuthorizationTests : IntegrationTest
         await response.ShouldHaveStatusCode(HttpStatusCode.Created);
     }
 
-    
+    [Fact]
+    public async Task MemberCanUpdateOwnAccount()
+    {
+        var memberId = await AuthenticateAsMember();
+
+        var request = new UpdateMemberRequest
+        {
+            Name = "Ada Byron",
+            Email = "ada.byron@example.com",
+        };
+
+        var response = await Client.PutAsJsonAsync($"/members/{memberId}", request);
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task MemberCannotUpdateAnotherMember()
+    {
+        var currentMemberId = await AuthenticateAsMember();
+
+        var otherMemberId = SeedMember("Grace Hopper", "grace@example.com");
+
+        var request = new UpdateMemberRequest
+        {
+            Name = "Changed Name",
+            Email = "changed@example.com",
+        };
+
+        var response = await Client.PutAsJsonAsync($"/members/{otherMemberId}", request);
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
+
+        var member = Reader.Query(db => db.Members.Find(otherMemberId));
+
+        Assert.NotNull(member);
+        Assert.Equal("Grace Hopper", member.Name.Value);
+        Assert.Equal("grace@example.com", member.Email.Value);
+    }
+
+    [Fact]
+    public async Task MemberCannnotDeleteAnotherMember()
+    {
+        var currentMemberId = await AuthenticateAsMember();
+
+        var otherMemberId = SeedMember("Grace Hopper", "grace@example.com");
+
+        var response = await Client.DeleteAsync($"/members/{otherMemberId}");
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
+
+        var member = Reader.Query(db => db.Members.Find(otherMemberId));
+
+        Assert.NotNull(member);
+        Assert.Equal("Grace Hopper", member.Name.Value);
+        Assert.Equal("grace@example.com", member.Email.Value);
+    }
 }

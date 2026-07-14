@@ -32,12 +32,16 @@ public abstract class IntegrationTest : IDisposable
         factory.Dispose();
     }
 
-    protected void SeedMember(string password = "analytical-engine")
+    protected int SeedMember(
+        string name = "Ada Lovelace",
+        string email = "ada@example.com",
+        string password = "analytical-engine"
+    )
     {
         var member = new Member
         {
-            Name = new MemberName("Ada Lovelace"),
-            Email = new MemberEmail("ada@example.com"),
+            Name = new MemberName(name),
+            Email = new MemberEmail(email),
             PasswordHash = string.Empty,
         };
 
@@ -46,6 +50,8 @@ public abstract class IntegrationTest : IDisposable
         member.PasswordHash = passwordHasher.HashPassword(member, password);
 
         Writer.Seed(db => db.Members.Add(member));
+
+        return member.Id;
     }
 
     protected async Task<int> AuthenticateAsMember(

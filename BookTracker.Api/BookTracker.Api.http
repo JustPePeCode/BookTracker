@@ -3,8 +3,6 @@
 
 
 GET http://localhost:5198/books
-###
-
 
 ### Create Book
 POST http://localhost:5198/books
@@ -15,9 +13,6 @@ Content-Type: application/json
   "author": "Frank Herbert",
   "year": 1965
 }
-###
-
-GET http://localhost:5198/books
 
 
 ### Delete Book
@@ -114,3 +109,14 @@ Content-Type: application/json
 ### Current member
 GET http://localhost:5198/auth/me
 Authorization: Bearer paste-token-here
+
+###### Create book with token
+POST http://localhost:5198/books
+Content-Type: application/json
+Authorization: Bearer paste-token-here
+
+{
+  "title": "Dune",
+  "author": "Frank Herbert",
+  "year": 1965
+}
