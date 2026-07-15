@@ -20,8 +20,6 @@ public class CreateMemberTests : IntegrationTest
 
         var response = await Client.PostAsJsonAsync("/members", request);
         await response.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
-
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -83,7 +81,7 @@ public class CreateMemberTests : IntegrationTest
                 {
                     Name = new MemberName("Jack"),
                     Email = new MemberEmail("Jack@Sea.com"),
-                    PasswordHash = "test-password-hash"
+                    PasswordHash = "test-password-hash",
                 }
             );
         });
@@ -97,5 +95,26 @@ public class CreateMemberTests : IntegrationTest
         var response = await Client.PostAsJsonAsync("/members", request);
         await response.ShouldHaveStatusCode(HttpStatusCode.Conflict);
         ;
+    }
+
+    [Fact]
+    public async Task CreateMemberCreatesRegularMember()
+    {
+        var request = new CreateMemberRequest
+        {
+            Name = "Grace Hopper",
+            Email = "grace@example.com",
+            Password = "debugging-moth",
+        };
+
+        var response = await Client.PostAsJsonAsync("/members", request);
+
+        var created = await response.ReadJsonAs<CreateMemberResponse>(HttpStatusCode.Created);
+
+        var member = Reader.Query(db => db.Members.Find(created.Id));
+
+        Assert.NotNull(member);
+
+        Assert.Equal(MemberRole.Member, member.Role);
     }
 }

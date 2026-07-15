@@ -1,9 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
-using BookTracker.Api.Application.Members.CreateMember;
 using BookTracker.Api.Application.Members.UpdateMember;
 using BookTracker.Api.Domain.Members;
-using Microsoft.AspNetCore.Identity;
 
 namespace BookTracker.Api.Tests.IntegrationTests.Members.UpdateMember;
 

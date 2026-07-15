@@ -6,6 +6,8 @@ using BookTracker.Api.Application.Members.GetMemberDetails;
 using BookTracker.Api.Application.Members.GetMemberSummaries;
 using BookTracker.Api.Application.Members.UpdateMember;
 using BookTracker.Api.Domain;
+using BookTracker.Api.Domain.Members;
+using BookTracker.Api.Security;
 
 namespace BookTracker.Api.Endpoints.Members;
 
@@ -13,8 +15,10 @@ public static class MemberEndpoints
 {
     public static IEndpointRouteBuilder MapMemberEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/members", GetMemberSummaries);
-        app.MapGet("/members/{id:int}", GetMemberDetails);
+        app.MapGet("/members", GetMemberSummaries)
+            .RequireAuthorization(AuthorizationPolicies.ManageMembers);
+        app.MapGet("/members/{id:int}", GetMemberDetails)
+            .RequireAuthorization(AuthorizationPolicies.ManageMembers);
         app.MapPost("/members", CreateMember);
 
         app.MapPut("/members/{id:int}", UpdateMember).RequireAuthorization();
@@ -23,8 +27,13 @@ public static class MemberEndpoints
         return app;
     }
 
-    private static bool IsCurrentMember(ClaimsPrincipal user, int memberId)
+    private static bool CanManageMember(ClaimsPrincipal user, int memberId)
     {
+        if (user.IsInRole(nameof(MemberRole.Administrator)))
+        {
+            return true;
+        }
+
         var claim = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
         return int.TryParse(claim, out var currentMemberId) && currentMemberId == memberId;
@@ -45,7 +54,7 @@ public static class MemberEndpoints
         var member = await query.Execute(id);
 
         if (member is null)
-        {
+        { 
             return Results.NotFound();
         }
 
@@ -79,7 +88,7 @@ public static class MemberEndpoints
         UpdateMemberCommandHandler handler
     )
     {
-        if (!IsCurrentMember(user, id))
+        if (!CanManageMember(user, id))
         {
             return Results.Forbid();
         }
@@ -111,7 +120,7 @@ public static class MemberEndpoints
         DeleteMemberCommandHandler handler
     )
     {
-        if (!IsCurrentMember(user, id))
+        if (!CanManageMember(user, id))
         {
             return Results.Forbid();
         }

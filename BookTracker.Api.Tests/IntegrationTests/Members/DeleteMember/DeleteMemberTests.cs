@@ -12,8 +12,6 @@ public class DeleteMemberTests : IntegrationTest
         var response = await Client.DeleteAsync($"/members/{memberId}");
         await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-
         var member = Reader.Query(db => db.Members.Find(memberId));
 
         Assert.Null(member);
@@ -25,7 +23,5 @@ public class DeleteMemberTests : IntegrationTest
         await AuthenticateAsMember();
         var response = await Client.DeleteAsync("/members/9999");
         await response.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
-
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 }

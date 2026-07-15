@@ -105,6 +105,14 @@ Content-Type: application/json
   "email": "ada@example.com",
   "password": "analytical-engine"
 }
+### Login as administrator
+POST http://localhost:5198/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@booktracker.local",
+  "password": "development-admin-password"
+}
 
 ### Current member
 GET http://localhost:5198/auth/me
@@ -113,10 +121,11 @@ Authorization: Bearer paste-token-here
 ###### Create book with token
 POST http://localhost:5198/books
 Content-Type: application/json
-Authorization: Bearer paste-token-here
-
-{
-  "title": "Dune",
+Authorization: Bearer paste-admin-token-here
   "author": "Frank Herbert",
   "year": 1965
-}
+
+
+### Administrator views members
+GET http://localhost:5198/members
+Authorization: Bearer paste-admin-token-here

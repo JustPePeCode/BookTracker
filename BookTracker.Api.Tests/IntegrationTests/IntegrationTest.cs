@@ -3,8 +3,6 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.Auth.Login;
 using BookTracker.Api.Domain.Members;
-using BookTracker.Api.Domain.Members;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace BookTracker.Api.Tests.IntegrationTests;
@@ -55,6 +53,7 @@ public abstract class IntegrationTest : IDisposable
     }
 
     protected async Task<int> AuthenticateAsMember(
+        MemberRole role = MemberRole.Member,
         string name = "Ada Lovelace",
         string email = "ada@example.com",
         string password = "analytical-engine"
@@ -65,6 +64,7 @@ public abstract class IntegrationTest : IDisposable
             Name = new MemberName(name),
             Email = new MemberEmail(email),
             PasswordHash = string.Empty,
+            Role = role,
         };
 
         var passwordHasher = new PasswordHasher<Member>();

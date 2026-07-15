@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.Members.CreateMember;
 using BookTracker.Api.Application.Members.UpdateMember;
+using BookTracker.Api.Domain.Members;
 
 namespace BookTracker.Api.Tests.IntegrationTests.Members.Authorization;
 
@@ -78,5 +79,104 @@ public class MemberAuthorizationTests : IntegrationTest
         Assert.NotNull(member);
         Assert.Equal("Grace Hopper", member.Name.Value);
         Assert.Equal("grace@example.com", member.Email.Value);
+    }
+
+    [Fact]
+    public async Task MemberListRequiresAuthentication()
+    {
+        var response = await Client.GetAsync("/members");
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task RegularMemberCannotViewMemberList()
+    {
+        await AuthenticateAsMember();
+
+        var response = await Client.GetAsync("/members");
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task AdministratorCanViewMemberList()
+    {
+        await AuthenticateAsMember(MemberRole.Administrator);
+
+        var response = await Client.GetAsync("/members");
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task MemberRequiresAuthentication()
+    {
+        var response = await Client.GetAsync("/members/1");
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task RegularMemberCannotViewMember()
+    {
+        await AuthenticateAsMember();
+
+        var response = await Client.GetAsync("/members/1");
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task AdministratorCanViewMember()
+    {
+        await AuthenticateAsMember(MemberRole.Administrator);
+
+        var response = await Client.GetAsync("/members/1");
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task AdministratorCanChangeMember()
+    {
+        var other = new Member
+        {
+            Name = new MemberName("Jack"),
+            Email = new MemberEmail("Jack@Sea.com"),
+            PasswordHash = "test-password-hash",
+        };
+        Writer.Seed(db => db.Members.Add(other));
+
+        await AuthenticateAsMember(MemberRole.Administrator);
+        var request = new UpdateMemberRequest
+        {
+            Name = "Pjotter",
+            Email = "Pjotter@MotherRussia.com",
+        };
+
+        var response = await Client.PutAsJsonAsync($"/members/{other.Id}", request);
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task AdministratorCanDeleteMember()
+    {
+        var other = new Member
+        {
+            Name = new MemberName("Jack"),
+            Email = new MemberEmail("Jack@Sea.com"),
+            PasswordHash = "test-password-hash",
+        };
+        Writer.Seed(db => db.Members.Add(other));
+
+        await AuthenticateAsMember(MemberRole.Administrator);
+        var response = await Client.DeleteAsync($"/members/{other.Id}");
+        await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        var member = Reader.Query(db => db.Members.Find(other.Id));
+
+        Assert.Null(member);
     }
 }
