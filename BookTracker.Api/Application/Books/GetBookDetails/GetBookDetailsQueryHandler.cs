@@ -16,6 +16,7 @@ public class GetBookDetailsQueryHandler(AppDbContext dbContext) : IHandler
                 Title = book.Title.Value,
                 Author = book.Author.Value,
                 Year = book.Year,
+                Version = book.Version
             })
             .FirstOrDefaultAsync();
     }

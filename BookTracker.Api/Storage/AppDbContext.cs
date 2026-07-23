@@ -20,7 +20,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             book.Property(b => b.Author)
                 .HasConversion(author => author.Value, value => new AuthorName(value))
                 .HasMaxLength(AuthorName.MaxLength);
-            // voeg hier de configuratie voor AuthorName toe
+            book.Property(book => book.Version)
+                .IsConcurrencyToken();
         });
 
         modelBuilder.Entity<Member>(member =>

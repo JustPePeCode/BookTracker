@@ -2,7 +2,7 @@
 
 
 
-GET http://localhost:5198/books
+GET http://localhost:5198/books/501
 
 ### Create Book
 POST http://localhost:5198/books
@@ -105,6 +105,15 @@ Content-Type: application/json
   "email": "ada@example.com",
   "password": "analytical-engine"
 }
+### Create administrator with credentials
+POST http://localhost:5198/members
+Content-Type: application/json
+
+{
+  "name": "Adamin Lovelace",
+  "email": "admin@booktracker.local",
+  "password": "development-admin-password"
+}
 ### Login as administrator
 POST http://localhost:5198/auth/login
 Content-Type: application/json
@@ -121,11 +130,27 @@ Authorization: Bearer paste-token-here
 ###### Create book with token
 POST http://localhost:5198/books
 Content-Type: application/json
-Authorization: Bearer paste-admin-token-here
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQm9vayBUcmFja2VyIEFkbWluIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRtaW5AYm9va3RyYWNrZXIubG9jYWwiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzg0ODAxNTA2LCJpc3MiOiJCb29rVHJhY2tlciIsImF1ZCI6IkJvb2tUcmFja2VyIn0.kEgTRTo1_9bihfEU0OauJf57SZ3o1w3eChOd94xlaGk
+
+  {
+  "title": "Dune",
   "author": "Frank Herbert",
   "year": 1965
+  }
 
 
 ### Administrator views members
 GET http://localhost:5198/members
 Authorization: Bearer paste-admin-token-here
+
+### First update
+PUT http://localhost:5198/books/501
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQm9vayBUcmFja2VyIEFkbWluIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRtaW5AYm9va3RyYWNrZXIubG9jYWwiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzg0ODAxNTA2LCJpc3MiOiJCb29rVHJhY2tlciIsImF1ZCI6IkJvb2tUcmFja2VyIn0.kEgTRTo1_9bihfEU0OauJf57SZ3o1w3eChOd94xlaGk
+
+{
+  "title": "Dune: Special Edition",
+  "author": "Frank Herbert",
+  "year": 1965,
+  "version": "2d512f49-2d26-44f0-8d9c-4d447ace8df4"
+}
