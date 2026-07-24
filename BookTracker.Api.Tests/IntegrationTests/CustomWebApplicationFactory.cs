@@ -12,7 +12,7 @@ namespace BookTracker.Api.Tests.IntegrationTests;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
-    private SqliteConnection connection = null!;
+    private SqliteConnection? connection;
 
     public EfReader GetReader() => new(Services);
 
@@ -69,9 +69,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         });
     }
 
+
     protected override void Dispose(bool disposing)
     {
+        if (disposing)
+        {
+            connection?.Dispose();
+        }
+
         base.Dispose(disposing);
-        connection.Dispose();
     }
 }
