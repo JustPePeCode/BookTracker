@@ -50,6 +50,7 @@ export function CreateBookPage() {
 
   return (
     <main>
+      
       <Link to="/books">Cancel</Link>
       <h1>Add book</h1>
 
@@ -68,6 +69,7 @@ export function CreateBookPage() {
           Year
           <input name="year" type="number" required />
         </label>
+        
 
         <button type="submit" disabled={createMutation.isPending}>
           {createMutation.isPending ? "Saving..." : "Add book"}
@@ -80,7 +82,9 @@ export function CreateBookPage() {
       {forbidden && <p>Only administrators can add books.</p>}
       {createMutation.isError && !badRequest && !unauthorized && !forbidden && (
         <p>Could not add the book.</p>
+        
       )}
     </main>
+    
   );
 }

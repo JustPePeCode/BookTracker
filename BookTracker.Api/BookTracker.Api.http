@@ -2,7 +2,7 @@
 
 
 
-GET http://localhost:5198/books/501
+GET http://localhost:5198/books/1
 
 ### Create Book
 POST http://localhost:5198/books
@@ -26,12 +26,15 @@ DELETE http://localhost:5198/books/9999
 
 PUT http://localhost:5198/books/1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQm9vayBUcmFja2VyIEFkbWluIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRtaW5AYm9va3RyYWNrZXIubG9jYWwiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzg1MjI5NzgxLCJpc3MiOiJCb29rVHJhY2tlciIsImF1ZCI6IkJvb2tUcmFja2VyIn0.B3rOHbUcVfgni2mjKvrDumUdB9g0ZUDYjKoi551gs7A
 
 {
   "title": "Changes",
   "author": "David Bowie",
-  "year": 1971
+  "year": 1974,
+ "version": "a274d355-6245-4d30-8791-ce0a3182dcff"
 }
+
 ###
 
 PUT http://localhost:5198/books/9999

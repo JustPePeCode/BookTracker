@@ -11,10 +11,7 @@ export class ApiError extends Error {
   }
 }
 
-export async function apiRequest<T>(
-  path: string,
-  options: RequestInit = {},
-): Promise<T> {
+async function sendRequest(path: string, options: RequestInit) {
   const headers = new Headers(options.headers);
   const token = getAccessToken();
 
@@ -40,5 +37,20 @@ export async function apiRequest<T>(
     );
   }
 
+  return response;
+}
+
+export async function apiRequest<T>(
+  path: string,
+  options: RequestInit = {},
+): Promise<T> {
+  const response = await sendRequest(path, options);
   return response.json() as Promise<T>;
+}
+
+export async function apiRequestWithoutResponse(
+  path: string,
+  options: RequestInit = {},
+): Promise<void> {
+  await sendRequest(path, options);
 }
