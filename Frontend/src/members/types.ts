@@ -9,3 +9,14 @@ export type RegisterMemberResponse = {
   name: string;
   email: string;
 };
+
+export type MemberSummary = {
+  id: number;
+  name: string;
+  email: string;
+};
+export type GetMembersRequest = {
+  page: number;
+  pageSize: number;
+  search: string;
+};
