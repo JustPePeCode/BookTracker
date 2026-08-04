@@ -27,6 +27,7 @@ public static class WebApplicationExtensions
 
             if (app.Configuration.GetValue<bool>("SeedDatabase"))
             {
+                DatabaseSeeder.SeedMembers(dbContext, 50);
                 DatabaseSeeder.SeedBooks(dbContext, 500);
                 DatabaseSeeder.SeedAdministrator(dbContext, app.Configuration, passwordHasher);
             }
