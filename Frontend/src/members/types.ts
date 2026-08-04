@@ -41,7 +41,6 @@ export type CreateMemberResponse = {
 };
 
 export type UpdateMemberRequest = {
-  id: number;
   name: string;
   email: string;
 };

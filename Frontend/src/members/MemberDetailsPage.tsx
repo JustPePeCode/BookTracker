@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { ApiError } from "../api";
 import { getMember } from "./membersApi";
+import { EditMemberLink } from "./EditMemberLink";
 
 function readMemberId(value: string | undefined) {
   const memberId = Number(value);
@@ -65,8 +66,10 @@ export function MemberDetailsPage() {
   return (
     <main>
       <Link to="/members">Back to members</Link>
+  
       <h1>Name:{member.name}</h1>
       <p>Email: {member.email}</p>
+      <EditMemberLink memberId={member.id} />
     </main>
   );
 }
