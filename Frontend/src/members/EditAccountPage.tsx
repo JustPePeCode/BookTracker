@@ -40,7 +40,7 @@ export function EditAccountPage() {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["members"] });
-      navigate(`/auth/me`);
+      navigate(`/account`);
     },
   });
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -105,7 +105,7 @@ export function EditAccountPage() {
       : null;
   return (
     <main>
-      <Link to={`account`}>Cancel</Link>
+      <Link to="/account">Cancel</Link>
       <h1>Edit {member.name}</h1>
 
       <form onSubmit={handleSubmit}>
@@ -155,5 +155,4 @@ export function EditAccountPage() {
       )}
     </main>
   );
- 
 }

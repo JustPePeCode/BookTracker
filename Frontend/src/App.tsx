@@ -29,7 +29,6 @@ export default function App() {
         <Route path="/books" element={<BookListPage />} />
         <Route path="/books/:bookId" element={<BookDetailsPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/auth/me" element={<EditMemberPage />} />
         <Route path="/account/edit/:memberId" element={<EditAccountPage />} />
 
         <Route element={<RequireAdministrator />}>

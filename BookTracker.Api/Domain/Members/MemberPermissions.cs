@@ -4,21 +4,31 @@ namespace BookTracker.Api.Domain.Members;
 
 public static class MemberPermissions
 {
-    public static void EnsureCanViewDirectory(
-        Actor actor)
+    public static void EnsureCanViewDirectory(Actor actor)
     {
         if (actor.IsAdministrator)
         {
             return;
         }
 
-        throw new ForbiddenOperationException(
-            "This actor cannot view the member directory.");
+        throw new ForbiddenOperationException("This actor cannot view the member directory.");
     }
 
-    public static void EnsureCanManage(
-        Actor actor,
-        int memberId)
+    public static void EnsureCanViewAccount(Actor actor, int memberId)
+    {
+        if (actor.IsAdministrator)
+        {
+            return;
+        }
+        if (actor.MemberId == memberId)
+        {
+            return;
+        }
+
+        throw new ForbiddenOperationException("This actor cannot view the member directory.");
+    }
+
+    public static void EnsureCanManage(Actor actor, int memberId)
     {
         if (actor.IsAdministrator)
         {
@@ -30,7 +40,6 @@ public static class MemberPermissions
             return;
         }
 
-        throw new ForbiddenOperationException(
-            "This actor cannot manage this member.");
+        throw new ForbiddenOperationException("This actor cannot manage this member.");
     }
 }
