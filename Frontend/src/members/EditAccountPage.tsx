@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../api";
 import { getMember, updateMember } from "./membersApi";
 import type { UpdateMemberRequest } from "./types";
+import { removeAccessToken } from "../auth/tokenStorage";
 
 function readMemberId(value: string | undefined) {
   const memberId = Number(value);
@@ -38,9 +39,15 @@ export function EditAccountPage() {
 
       return updateMember(memberId, request);
     },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["members"] });
-      navigate(`/account`);
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["members"],
+        refetchType: "none",
+      });
+      removeAccessToken();
+      queryClient.removeQueries({ queryKey: ["current-member"] });
+      navigate("/login");
     },
   });
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
