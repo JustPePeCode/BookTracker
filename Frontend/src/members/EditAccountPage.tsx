@@ -5,6 +5,7 @@ import { ApiError } from "../api";
 import { getMember, updateMember } from "./membersApi";
 import type { UpdateMemberRequest } from "./types";
 import { removeAccessToken } from "../auth/tokenStorage";
+import { DeleteMemberButton } from "./DeleteMemberButton";
 
 function readMemberId(value: string | undefined) {
   const memberId = Number(value);
@@ -110,6 +111,11 @@ export function EditAccountPage() {
     updateMutation.error instanceof ApiError
       ? updateMutation.error.status
       : null;
+
+  const mutationErrorMessage =
+    updateMutation.error instanceof ApiError
+      ? updateMutation.error.message
+      : null;
   return (
     <main>
       <Link to="/account">Cancel</Link>
@@ -117,7 +123,8 @@ export function EditAccountPage() {
 
       <form onSubmit={handleSubmit}>
         <label>
-          Name
+          {" "}
+          Name:{" "}
           <input
             name="name"
             defaultValue={member.name}
@@ -125,9 +132,9 @@ export function EditAccountPage() {
             required
           />
         </label>
-
         <label>
-          Email
+          {" "}
+          Email:{" "}
           <input
             name="email"
             defaultValue={member.email}
@@ -135,10 +142,11 @@ export function EditAccountPage() {
             required
           />
         </label>
-
         <button type="submit" disabled={updateMutation.isPending}>
           {updateMutation.isPending ? "Saving..." : "Save changes"}
-        </button>
+        </button>{" "}
+        TEST
+        <DeleteMemberButton memberId={member.id} name={member.name} />
       </form>
 
       {formError && <p>{formError}</p>}
@@ -148,10 +156,7 @@ export function EditAccountPage() {
       {mutationStatus === 404 && <p>This member no longer exists.</p>}
       {mutationStatus === 409 && (
         <div>
-          <p>
-            Your Account was changed by another user. Your changes were not
-            saved.
-          </p>
+          <p>{mutationErrorMessage}</p>
           <button type="button" onClick={reloadLatest}>
             Load latest version
           </button>

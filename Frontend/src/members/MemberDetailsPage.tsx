@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { ApiError } from "../api";
 import { getMember } from "./membersApi";
 import { EditMemberLink } from "./EditMemberLink";
+import { DeleteMemberButton } from "./DeleteMemberButton";
 
 function readMemberId(value: string | undefined) {
   const memberId = Number(value);
@@ -70,6 +71,7 @@ export function MemberDetailsPage() {
       <h1>Name:{member.name}</h1>
       <p>Email: {member.email}</p>
       <EditMemberLink memberId={member.id} />
+      <DeleteMemberButton memberId={member.id} name={member.name} />
     </main>
   );
 }

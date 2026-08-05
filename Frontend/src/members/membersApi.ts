@@ -40,3 +40,9 @@ export function updateMember(memberId: number, request: UpdateMemberRequest) {
     body: JSON.stringify(request),
   });
 }
+
+export function deleteMember(memberId: number) {
+  return apiRequestWithoutResponse(`/members/${memberId}`, {
+    method: "DELETE",
+  });
+}

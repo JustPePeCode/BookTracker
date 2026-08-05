@@ -103,6 +103,11 @@ export function EditMemberPage() {
     updateMutation.error instanceof ApiError
       ? updateMutation.error.status
       : null;
+
+  const mutationErrorMessage =
+    updateMutation.error instanceof ApiError
+      ? updateMutation.error.message
+      : null;
   return (
     <main>
       <Link to={`/members/${member.id}`}>Cancel</Link>
@@ -141,10 +146,7 @@ export function EditMemberPage() {
       {mutationStatus === 404 && <p>This member no longer exists.</p>}
       {mutationStatus === 409 && (
         <div>
-          <p>
-            This member was changed by another user. Your changes were not
-            saved.
-          </p>
+          <p>{mutationErrorMessage}</p>
           <button type="button" onClick={reloadLatest}>
             Load latest version
           </button>
