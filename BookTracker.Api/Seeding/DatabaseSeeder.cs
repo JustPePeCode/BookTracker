@@ -7,6 +7,20 @@ namespace BookTracker.Api.Seeding;
 
 public static class DatabaseSeeder
 {
+    public static void SeedMembers(AppDbContext dbContext, int count = 50)
+    {
+        if (dbContext.Members.Count()>1)
+        {
+            return;
+        }
+
+        var members = MemberFuzzr.Many(count);
+
+        dbContext.Members.AddRange(members);
+
+        dbContext.SaveChanges();
+    }
+    
     public static void SeedBooks(AppDbContext dbContext, int count = 50)
     {
         if (dbContext.Books.Any())

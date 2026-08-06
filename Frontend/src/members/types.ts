@@ -10,6 +10,12 @@ export type RegisterMemberResponse = {
   email: string;
 };
 
+export type MemberDetails = {
+  id: number;
+  name: string;
+  email: string;
+};
+
 export type MemberSummary = {
   id: number;
   name: string;
@@ -19,4 +25,21 @@ export type GetMembersRequest = {
   page: number;
   pageSize: number;
   search: string;
+};
+
+export type CreateMemberRequest = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+export type CreateMemberResponse = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+export type UpdateMemberRequest = {
+  name: string;
+  email: string;
 };

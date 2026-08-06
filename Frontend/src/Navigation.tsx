@@ -9,28 +9,25 @@ export function Navigation() {
 
   return (
     <nav>
-      <Link to="/">Home</Link>{" "}
-      <Link to="/books">Books</Link>{" "}
-      <Link to="/members">Members</Link>{" "}
-
+      <Link to="/">Home</Link> <Link to="/books">Books</Link>{" "}
       {!hasToken && (
         <>
-          <Link to="/register">Register</Link>{" "}
-          <Link to="/login">Log in</Link>
+          <Link to="/register">Register</Link> <Link to="/login">Log in</Link>
         </>
       )}
-
       {hasToken && currentMemberQuery.isPending && (
         <span>Checking account...</span>
       )}
-
-      {hasToken && currentMemberQuery.isSuccess && (
+      {hasToken && currentMemberQuery.data?.role === "Administrator" && (
         <>
-          <Link to="/account">Account</Link>{" "}
-          <LogoutButton />
+          <Link to="/members">Members</Link>{" "}
         </>
       )}
-
+      {hasToken && currentMemberQuery.isSuccess && (
+        <>
+          <Link to="/account">Account</Link> <LogoutButton />
+        </>
+      )}
       {hasToken && currentMemberQuery.isError && <LogoutButton />}
     </nav>
   );
