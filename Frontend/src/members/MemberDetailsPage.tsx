@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { ApiError } from "../api";
-import { getMember } from "./membersApi";
+import { getMember } from "./MembersApi";
 import { EditMemberLink } from "./EditMemberLink";
 import { DeleteMemberButton } from "./DeleteMemberButton";
 
@@ -67,7 +67,7 @@ export function MemberDetailsPage() {
   return (
     <main>
       <Link to="/members">Back to members</Link>
-  
+
       <h1>Name:{member.name}</h1>
       <p>Email: {member.email}</p>
       <EditMemberLink memberId={member.id} />
