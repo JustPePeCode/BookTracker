@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { ApiError } from "../api";
 import { useCurrentMember } from "../auth/useCurrentMember";
-import { deleteMember } from "./membersApi";
+import { deleteMember } from "./MembersApi";
 import { removeAccessToken } from "../auth/tokenStorage";
 
 type DeleteMemberButtonProps = {

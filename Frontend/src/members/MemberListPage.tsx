@@ -1,8 +1,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { FormEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { getMembers } from "./membersApi";
-
+import { getMembers } from "./MembersApi";
 
 const pageSize = 10;
 
@@ -58,10 +57,9 @@ export function MemberListPage() {
   return (
     <main>
       <h1>Members</h1>
-      
       <form key={search} onSubmit={handleSearch}>
         <label>
-          Search by name or email {" "}
+          Search by name or email{" "}
           <input type="search" name="search" defaultValue={search} />
         </label>
         <button type="submit">Search</button>
@@ -73,7 +71,8 @@ export function MemberListPage() {
           {result.items.map((member) => (
             <li key={member.id}>
               <Link to={`/members/${member.id}`}>
-                <strong>Name:</strong> {member.name} <strong>Email:</strong> {member.email}
+                <strong>Name:</strong> {member.name} <strong>Email:</strong>{" "}
+                {member.email}
               </Link>
             </li>
           ))}
