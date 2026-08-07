@@ -41,35 +41,24 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
         builder.ConfigureServices(services =>
         {
-            builder.ConfigureAppConfiguration(
-                (context, config) =>
-                {
-                    config.AddInMemoryCollection(
-                        new Dictionary<string, string?> { ["SeedDatabase"] = "false" }
-                    );
-                }
+            var descriptor = services.SingleOrDefault(service =>
+                service.ServiceType == typeof(DbContextOptions<AppDbContext>)
             );
-            builder.ConfigureServices(services =>
+
+            if (descriptor is not null)
             {
-                var descriptor = services.SingleOrDefault(service =>
-                    service.ServiceType == typeof(DbContextOptions<AppDbContext>)
-                );
+                services.Remove(descriptor);
+            }
 
-                if (descriptor is not null)
-                {
-                    services.Remove(descriptor);
-                }
+            connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
 
-                connection = new SqliteConnection("DataSource=:memory:");
-                connection.Open();
+            services.AddDbContext<AppDbContext>(options => options.UseSqlite(connection));
 
-                services.AddDbContext<AppDbContext>(options => options.UseSqlite(connection));
-
-                var sp = services.BuildServiceProvider();
-                using var scope = sp.CreateScope();
-                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                db.Database.EnsureCreated();
-            });
+            var sp = services.BuildServiceProvider();
+            using var scope = sp.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.Database.EnsureCreated();
         });
     }
 

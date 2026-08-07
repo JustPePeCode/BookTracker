@@ -120,6 +120,14 @@ public class MemberAuthorizationTests : IntegrationTest
     [Fact]
     public async Task RegularMemberCannotViewMember()
     {
+        var other = new Member
+        {
+            Name = new MemberName("Jack"),
+            Email = new MemberEmail("Jack@Sea.com"),
+            PasswordHash = "test-password-hash",
+        };
+        Writer.Seed(db => db.Members.Add(other));
+        
         await AuthenticateAsMember();
 
         var response = await Client.GetAsync("/members/1");
