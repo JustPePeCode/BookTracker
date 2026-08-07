@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-
 namespace BookTracker.Api.Tests.IntegrationTests;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
@@ -38,37 +37,41 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureAppConfiguration(
-            (context, config) =>
-            {
-                config.AddInMemoryCollection(
-                    new Dictionary<string, string?> { ["SeedDatabase"] = "false" }
-                );
-            }
-        );
+        builder.UseEnvironment("Testing");
+
         builder.ConfigureServices(services =>
         {
-            var descriptor = services.SingleOrDefault(service =>
-                service.ServiceType == typeof(DbContextOptions<AppDbContext>)
+            builder.ConfigureAppConfiguration(
+                (context, config) =>
+                {
+                    config.AddInMemoryCollection(
+                        new Dictionary<string, string?> { ["SeedDatabase"] = "false" }
+                    );
+                }
             );
-
-            if (descriptor is not null)
+            builder.ConfigureServices(services =>
             {
-                services.Remove(descriptor);
-            }
+                var descriptor = services.SingleOrDefault(service =>
+                    service.ServiceType == typeof(DbContextOptions<AppDbContext>)
+                );
 
-            connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
+                if (descriptor is not null)
+                {
+                    services.Remove(descriptor);
+                }
 
-            services.AddDbContext<AppDbContext>(options => options.UseSqlite(connection));
+                connection = new SqliteConnection("DataSource=:memory:");
+                connection.Open();
 
-            var sp = services.BuildServiceProvider();
-            using var scope = sp.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            db.Database.EnsureCreated();
+                services.AddDbContext<AppDbContext>(options => options.UseSqlite(connection));
+
+                var sp = services.BuildServiceProvider();
+                using var scope = sp.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.EnsureCreated();
+            });
         });
     }
-
 
     protected override void Dispose(bool disposing)
     {
