@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../api";
-import { getMember, updateMember } from "./MembersApi";
+import { getMember, updateMember } from "./MemberApi";
 import type { UpdateMemberRequest } from "./types";
 import { removeAccessToken } from "../auth/tokenStorage";
 import { DeleteMemberButton } from "./DeleteMemberButton";

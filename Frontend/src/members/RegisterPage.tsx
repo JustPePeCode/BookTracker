@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { ApiError } from "../api";
-import { registerMember } from "./MembersApi";
+import { registerMember } from "./MemberApi";
 
 export function RegisterPage() {
   const [formError, setFormError] = useState<string | null>(null);
@@ -27,8 +27,7 @@ export function RegisterPage() {
     const name = formData.get("name")?.toString().trim() ?? "";
     const email = formData.get("email")?.toString().trim() ?? "";
     const password = formData.get("password")?.toString() ?? "";
-    const confirmPassword =
-      formData.get("confirmPassword")?.toString() ?? "";
+    const confirmPassword = formData.get("confirmPassword")?.toString() ?? "";
 
     if (!name || !email || !password) {
       setFormError("Name, email and password are required.");
@@ -47,7 +46,7 @@ export function RegisterPage() {
 
     registerMutation.mutate({ name, email, password });
   }
-    const badRequest =
+  const badRequest =
     registerMutation.error instanceof ApiError &&
     registerMutation.error.status === 400;
 
@@ -62,12 +61,7 @@ export function RegisterPage() {
       <form onSubmit={handleSubmit}>
         <label>
           Name
-          <input
-            name="name"
-            autoComplete="name"
-            maxLength={100}
-            required
-          />
+          <input name="name" autoComplete="name" maxLength={100} required />
         </label>
 
         <label>
@@ -121,5 +115,4 @@ export function RegisterPage() {
     </main>
   );
   // put next steps here
-
 }

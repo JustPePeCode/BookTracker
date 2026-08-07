@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { FormEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { getMembers } from "./MembersApi";
+import { getMembers } from "./MemberApi";
 
 const pageSize = 10;
 
