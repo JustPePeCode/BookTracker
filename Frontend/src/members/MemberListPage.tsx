@@ -21,7 +21,6 @@ export function MemberListPage() {
     queryFn: () => getMembers({ page, pageSize, search }),
     placeholderData: keepPreviousData,
   });
-
   function setPage(nextPage: number) {
     const next = new URLSearchParams(searchParams);
 
@@ -46,7 +45,6 @@ export function MemberListPage() {
 
     setSearchParams(next);
   }
-
   if (membersQuery.isPending) {
     return <p>Loading members...</p>;
   }

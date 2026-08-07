@@ -31,6 +31,8 @@ export default function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/account/edit/:memberId" element={<EditAccountPage />} />
 
+        <Route path="/members" element={<MemberListPage />} />
+
         <Route element={<RequireAdministrator />}>
           <Route path="/members" element={<MemberListPage />} />
           <Route path="/members/:memberId" element={<MemberDetailsPage />} />

@@ -21,7 +21,6 @@ export type MemberSummary = {
   name: string;
   email: string;
 };
-
 export type GetMembersRequest = {
   page: number;
   pageSize: number;

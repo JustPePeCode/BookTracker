@@ -1,10 +1,10 @@
 import { apiRequest, apiRequestWithoutResponse } from "../api";
 import type { PagedResult } from "../types";
 import type {
+  GetMembersRequest,
   RegisterMemberRequest,
   RegisterMemberResponse,
   MemberDetails,
-  GetMembersRequest,
   MemberSummary,
   UpdateMemberRequest,
 } from "./types";
